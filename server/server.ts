@@ -23,18 +23,19 @@ const apolloServer = new ApolloServer({
 await apolloServer.start();
 
 app.use(
-  "/",
+  "/graphql",
   cors<cors.CorsRequest>(),
   express.json(),
   expressMiddleware(apolloServer)
 );
 
-app.get("/", (req, res) => {
+app.get("/hello", (req, res) => {
   res.send("Hello World");
 });
 
 await new Promise<void>((resolve) =>
-  httpServer.listen({ port: 3000 }, resolve)
+  httpServer.listen({ port: 3000, host: "0.0.0.0" }, () => {
+    console.log(`🚀 Server ready at http://localhost:3000/`);
+    resolve();
+  })
 );
-
-console.log(`🚀 Server ready at http://localhost:3000/`);
